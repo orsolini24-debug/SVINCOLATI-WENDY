@@ -1,0 +1,660 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SVINCOLATI WENDY</title>
+  <style>
+    :root{
+      --bg:#0b1020;
+      --panel:rgba(255,255,255,.08);
+      --panel2:rgba(255,255,255,.06);
+      --text:rgba(255,255,255,.92);
+      --muted:rgba(255,255,255,.65);
+      --line:rgba(255,255,255,.12);
+      --accent:#2e7dff;
+      --good:#33d17a;
+      --warn:#ffb020;
+      --bad:#ff4d4d;
+      --chip:#1a2442;
+      --shadow: 0 12px 40px rgba(0,0,0,.35);
+      --radius:18px;
+      --radius2:14px;
+      --font: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family:var(--font);
+      background:
+        radial-gradient(1200px 700px at 30% -10%, rgba(46,125,255,.35), transparent 55%),
+        radial-gradient(1000px 600px at 85% 10%, rgba(51,209,122,.18), transparent 55%),
+        radial-gradient(900px 600px at 50% 115%, rgba(255,176,32,.12), transparent 55%),
+        var(--bg);
+      color:var(--text);
+    }
+    .wrap{max-width:1100px;margin:0 auto;padding:14px 14px 38px}
+    .topbar{
+      border-radius:22px;
+      background: linear-gradient(180deg, rgba(46,125,255,.35), rgba(46,125,255,.08));
+      box-shadow: var(--shadow);
+      padding:14px 14px 10px;
+      border:1px solid rgba(255,255,255,.10);
+    }
+    .title{
+      display:flex;align-items:center;justify-content:space-between;gap:12px;
+      padding:6px 6px 12px;
+    }
+    .title h1{
+      font-size:18px;margin:0;letter-spacing:.4px;
+    }
+    .badge{
+      font-size:12px;padding:6px 10px;border-radius:999px;
+      background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.12);
+      color:var(--muted);
+    }
+    .filters{
+      display:grid;
+      grid-template-columns: 1.2fr 1fr;
+      gap:10px;
+    }
+    @media (max-width:860px){
+      .filters{grid-template-columns:1fr}
+    }
+    .card{
+      background:var(--panel);
+      border:1px solid rgba(255,255,255,.10);
+      border-radius:var(--radius);
+      padding:12px;
+    }
+    .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+    .row.space{justify-content:space-between}
+    .search{
+      width:100%;
+      display:flex;align-items:center;gap:10px;
+      background:rgba(255,255,255,.07);
+      border:1px solid rgba(255,255,255,.10);
+      border-radius:14px;
+      padding:10px 12px;
+    }
+    .search input{
+      width:100%;
+      background:transparent;border:0;outline:0;color:var(--text);
+      font-size:14px;
+    }
+    .chipset{display:flex;gap:8px;flex-wrap:wrap}
+    .chip{
+      background:rgba(255,255,255,.08);
+      border:1px solid rgba(255,255,255,.10);
+      color:var(--muted);
+      padding:8px 10px;
+      border-radius:999px;
+      font-size:12px;
+      display:flex;align-items:center;gap:8px;
+      cursor:pointer; user-select:none;
+      transition:.15s transform, .15s background;
+    }
+    .chip:hover{transform:translateY(-1px)}
+    .chip.active{
+      background:rgba(46,125,255,.22);
+      border-color:rgba(46,125,255,.55);
+      color:rgba(255,255,255,.9);
+    }
+    .chip .dot{
+      width:22px;height:22px;border-radius:50%;
+      display:inline-flex;align-items:center;justify-content:center;
+      background:rgba(255,255,255,.10);
+      color:rgba(255,255,255,.9);
+      font-weight:700;font-size:12px;
+    }
+    .chip.active .dot{background:rgba(46,125,255,.35)}
+    .control{
+      display:flex;align-items:center;gap:10px;
+      background:rgba(255,255,255,.06);
+      border:1px solid rgba(255,255,255,.10);
+      border-radius:14px;
+      padding:10px 12px;
+      min-width: 220px;
+    }
+    .control label{font-size:12px;color:var(--muted)}
+    .control select,.control input[type="number"]{
+      background:rgba(0,0,0,.15);
+      border:1px solid rgba(255,255,255,.10);
+      color:var(--text);
+      border-radius:10px;
+      padding:6px 8px;
+      outline:0;
+    }
+    .range{
+      display:grid;grid-template-columns:1fr 1fr;gap:8px;align-items:center;
+      width:100%;
+    }
+    .toggle{
+      display:flex;align-items:center;gap:10px;
+      background:rgba(255,255,255,.06);
+      border:1px solid rgba(255,255,255,.10);
+      border-radius:14px;
+      padding:10px 12px;
+    }
+    .switch{
+      width:46px;height:26px;border-radius:999px;
+      background:rgba(255,255,255,.12);
+      border:1px solid rgba(255,255,255,.12);
+      position:relative;cursor:pointer;flex:0 0 auto;
+    }
+    .switch:before{
+      content:"";
+      position:absolute;top:3px;left:3px;
+      width:20px;height:20px;border-radius:50%;
+      background:rgba(255,255,255,.88);
+      transition:.18s;
+    }
+    .switch.on{background:rgba(46,125,255,.35);border-color:rgba(46,125,255,.55)}
+    .switch.on:before{left:22px;background:white}
+    .btn{
+      background:rgba(46,125,255,.25);
+      border:1px solid rgba(46,125,255,.55);
+      color:white;
+      padding:10px 12px;
+      border-radius:14px;
+      font-size:13px;
+      cursor:pointer;
+      display:flex;align-items:center;gap:8px;
+      white-space:nowrap;
+    }
+    .btn.secondary{
+      background:rgba(255,255,255,.08);
+      border-color:rgba(255,255,255,.12);
+      color:var(--text);
+    }
+    .btn:active{transform:translateY(1px)}
+    .meta{
+      display:flex;gap:10px;flex-wrap:wrap;align-items:center;
+      color:var(--muted);font-size:12px;
+      padding:8px 4px 0;
+    }
+
+    table{
+      width:100%;
+      border-collapse:separate;
+      border-spacing:0;
+      background:var(--panel2);
+      border:1px solid rgba(255,255,255,.10);
+      border-radius:var(--radius);
+      overflow:hidden;
+      box-shadow: var(--shadow);
+    }
+    thead th{
+      text-align:left;
+      font-size:12px;
+      color:rgba(255,255,255,.8);
+      padding:12px 12px;
+      border-bottom:1px solid var(--line);
+      background:rgba(255,255,255,.06);
+      position:sticky; top:0; z-index:2;
+      cursor:pointer;
+      white-space:nowrap;
+    }
+    thead th .sort{opacity:.65;font-size:11px;margin-left:6px}
+    tbody td{
+      padding:10px 12px;
+      border-bottom:1px solid rgba(255,255,255,.08);
+      font-size:13px;
+      color:rgba(255,255,255,.9);
+      vertical-align:middle;
+    }
+    tbody tr:hover{background:rgba(255,255,255,.05)}
+    tbody tr:last-child td{border-bottom:0}
+    .role{
+      width:28px;height:28px;border-radius:50%;
+      display:inline-flex;align-items:center;justify-content:center;
+      font-weight:800;font-size:12px;
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(255,255,255,.08);
+    }
+    .role.P{background:rgba(255,176,32,.18);border-color:rgba(255,176,32,.35)}
+    .role.D{background:rgba(51,209,122,.14);border-color:rgba(51,209,122,.28)}
+    .role.C{background:rgba(46,125,255,.14);border-color:rgba(46,125,255,.30)}
+    .role.A{background:rgba(255,77,77,.14);border-color:rgba(255,77,77,.30)}
+    .name{
+      display:flex;flex-direction:column;gap:2px;
+    }
+    .name .main{font-weight:650}
+    .name .sub{font-size:11px;color:var(--muted)}
+    .tag{
+      display:inline-flex;align-items:center;gap:6px;
+      padding:4px 8px;border-radius:999px;
+      font-size:11px;
+      border:1px solid rgba(255,255,255,.12);
+      color:rgba(255,255,255,.85);
+      background:rgba(255,255,255,.08);
+    }
+    .tag.good{border-color:rgba(51,209,122,.30);background:rgba(51,209,122,.12)}
+    .tag.warn{border-color:rgba(255,176,32,.30);background:rgba(255,176,32,.12)}
+    details{
+      margin-top:14px;
+      background:rgba(255,255,255,.06);
+      border:1px solid rgba(255,255,255,.10);
+      border-radius:var(--radius);
+      padding:10px 12px;
+    }
+    summary{cursor:pointer;color:rgba(255,255,255,.9);font-weight:650}
+    .small{font-size:12px;color:var(--muted);line-height:1.45}
+    .list{
+      margin:10px 0 0;padding-left:18px;color:rgba(255,255,255,.86);
+      font-size:13px;
+    }
+    .muted{color:var(--muted)}
+    .footer{
+      margin-top:18px;
+      color:rgba(255,255,255,.55);
+      font-size:12px;
+      text-align:center;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="topbar">
+      <div class="title">
+        <h1>SVINCOLATI WENDY</h1>
+        <div class="badge" id="badgeBuild">dataset: Wendy + ceduti</div>
+      </div>
+
+      <div class="filters">
+        <div class="card">
+          <div class="search">
+            <span class="muted">🔎</span>
+            <input id="q" type="text" placeholder="Cerca per giocatore o squadra..." />
+          </div>
+
+          <div style="height:10px"></div>
+
+          <div class="row space">
+            <div class="chipset" id="roleChips"></div>
+            <div class="row">
+              <button class="btn secondary" id="btnReset">Reset</button>
+              <button class="btn" id="btnDownload">Scarica CSV</button>
+            </div>
+          </div>
+
+          <div class="meta" id="meta"></div>
+        </div>
+
+        <div class="card">
+          <div class="row" style="gap:8px;align-items:stretch">
+            <div class="toggle" style="flex:1">
+              <div style="display:flex;flex-direction:column;gap:2px">
+                <div style="font-size:12px;color:var(--muted)">Non più in lista</div>
+                <div style="font-size:13px">Mostra anche fuori lista</div>
+              </div>
+              <div class="switch" id="togFuori"></div>
+            </div>
+
+            <div class="control" style="flex:1">
+              <label>Filtro UNDER</label>
+              <select id="selUnder">
+                <option value="ALL">TUTTI</option>
+                <option value="UNDER">UNDER (≤23)</option>
+                <option value="OVER">OVER (&gt;23)</option>
+              </select>
+            </div>
+          </div>
+
+          <div style="height:10px"></div>
+
+          <div class="row" style="align-items:stretch">
+            <div class="control" style="flex:1;min-width:unset">
+              <div style="display:flex;flex-direction:column;gap:2px;flex:1">
+                <label>PGv</label>
+                <div class="range">
+                  <input id="pgMin" type="number" min="0" max="38" step="1" />
+                  <input id="pgMax" type="number" min="0" max="38" step="1" />
+                </div>
+              </div>
+            </div>
+
+            <div class="control" style="flex:1;min-width:unset">
+              <div style="display:flex;flex-direction:column;gap:2px;flex:1">
+                <label>Quotazione (Qi)</label>
+                <div class="range">
+                  <input id="qMin" type="number" min="0" max="500" step="1" />
+                  <input id="qMax" type="number" min="0" max="500" step="1" />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div style="height:10px"></div>
+
+          <div class="small">
+            Nota: i “ceduti” rientrano negli svincolati solo se il giocatore risulta ancora acquistabile nella lista aggiornata. Quelli marcati con <b>*</b> sono esclusi.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div style="height:14px"></div>
+
+    <table>
+      <thead>
+        <tr>
+          <th data-k="ruolo">R.<span class="sort" id="s_ruolo"></span></th>
+          <th data-k="nome">Nome<span class="sort" id="s_nome"></span></th>
+          <th data-k="pgv">PGv<span class="sort" id="s_pgv"></span></th>
+          <th data-k="mv">MV<span class="sort" id="s_mv"></span></th>
+          <th data-k="fm">FM<span class="sort" id="s_fm"></span></th>
+          <th data-k="qi">Qi<span class="sort" id="s_qi"></span></th>
+          <th data-k="qa">Qa<span class="sort" id="s_qa"></span></th>
+        </tr>
+      </thead>
+      <tbody id="tb"></tbody>
+    </table>
+
+    <details>
+      <summary>Controlli su ceduti (errori / esclusi)</summary>
+      <div class="small" style="margin-top:8px">
+        Se un ceduto non viene trovato, di solito è perché il nome nel tuo messaggio non coincide col nome nel file giocatori (o perché non è presente nella lista aggiornata).
+      </div>
+
+      <div style="margin-top:10px">
+        <div class="tag warn">Ceduti esclusi perché “*” (fuori lista)</div>
+        <ul class="list" id="ulExcluded"></ul>
+      </div>
+
+      <div style="margin-top:10px">
+        <div class="tag warn">Ceduti non trovati nella lista giocatori</div>
+        <ul class="list" id="ulUnmatched"></ul>
+      </div>
+    </details>
+
+    <div class="footer">
+      SVINCOLATI WENDY · pagina statica condivisibile (GitHub Pages)
+    </div>
+  </div>
+
+<script>
+/* =========================
+   DATASET (Wendy svincolati + ceduti)
+   ========================= */
+const DATA = ${json_data};
+
+const CEDUTI_EXCLUDED_STAR = ${json_excluded};
+const CEDUTI_UNMATCHED = ${json_unmatched};
+
+/* =========================
+   STATE
+   ========================= */
+const state = {
+  q: "",
+  role: "ALL",            // ALL, P, D, C, A
+  showFuori: false,
+  under: "ALL",           // ALL, UNDER, OVER
+  pgMin: 0,
+  pgMax: 38,
+  qMin: 0,
+  qMax: 500,
+  sortKey: "ruolo",
+  sortDir: "asc"          // asc / desc
+};
+
+const roleOrder = {P:0, D:1, C:2, A:3};
+const el = (id)=>document.getElementById(id);
+
+function fmt(n, d=2){
+  if(n===null || n===undefined || Number.isNaN(n)) return "–";
+  const x = Number(n);
+  return x.toFixed(d).replace(".", ",");
+}
+
+function normalize(s){
+  return (s||"").toString().toLowerCase().trim();
+}
+
+function computeBounds(){
+  const pgv = DATA.map(x=>x.pgv||0);
+  const qi = DATA.map(x=>x.qi||0);
+  state.pgMin = Math.min(...pgv, 0);
+  state.pgMax = Math.max(...pgv, 38);
+  state.qMin  = Math.min(...qi, 0);
+  state.qMax  = Math.max(...qi, 500);
+
+  el("pgMin").value = state.pgMin;
+  el("pgMax").value = state.pgMax;
+  el("qMin").value  = state.qMin;
+  el("qMax").value  = state.qMax;
+}
+
+function filterData(){
+  const q = normalize(state.q);
+  return DATA.filter(x=>{
+    if(!state.showFuori && x.fuori_lista) return false;
+
+    if(state.role !== "ALL" && x.ruolo !== state.role) return false;
+
+    if(state.under === "UNDER" && !(Number(x.under||99) <= 23)) return false;
+    if(state.under === "OVER"  && !(Number(x.under||0) > 23))  return false;
+
+    const pgv = Number(x.pgv||0);
+    if(pgv < Number(state.pgMin) || pgv > Number(state.pgMax)) return false;
+
+    const qi = Number(x.qi||0);
+    if(qi < Number(state.qMin) || qi > Number(state.qMax)) return false;
+
+    if(q){
+      const hay = normalize(x.nome)+" "+normalize(x.squadra);
+      if(!hay.includes(q)) return false;
+    }
+
+    return true;
+  });
+}
+
+function sortData(arr){
+  const k = state.sortKey;
+  const dir = state.sortDir === "asc" ? 1 : -1;
+  const copy = [...arr];
+  copy.sort((a,b)=>{
+    if(k==="ruolo"){
+      const ra = roleOrder[a.ruolo] ?? 9;
+      const rb = roleOrder[b.ruolo] ?? 9;
+      if(ra!==rb) return (ra-rb)*dir;
+      return a.nome.localeCompare(b.nome, "it")*dir;
+    }
+    if(["nome","squadra"].includes(k)){
+      return (String(a[k]||"").localeCompare(String(b[k]||""), "it"))*dir;
+    }
+    const na = Number(a[k] ?? -1);
+    const nb = Number(b[k] ?? -1);
+    if(na!==nb) return (na-nb)*dir;
+    return a.nome.localeCompare(b.nome, "it")*dir;
+  });
+  return copy;
+}
+
+function renderRoleChips(){
+  const counts = {ALL:DATA.length, P:0, D:0, C:0, A:0};
+  DATA.forEach(x=>{ if(counts[x.ruolo]!==undefined) counts[x.ruolo]++; });
+
+  const chipDef = [
+    {k:"ALL", label:"Tutti", dot:"∑", n:counts.ALL},
+    {k:"P", label:"Portieri", dot:"P", n:counts.P},
+    {k:"D", label:"Difensori", dot:"D", n:counts.D},
+    {k:"C", label:"Centroc.", dot:"C", n:counts.C},
+    {k:"A", label:"Attacc.", dot:"A", n:counts.A},
+  ];
+  const wrap = el("roleChips");
+  wrap.innerHTML = "";
+  chipDef.forEach(c=>{
+    const div=document.createElement("div");
+    div.className="chip"+(state.role===c.k?" active":"");
+    div.innerHTML = `<span class="dot">${c.dot}</span><span>${c.label}</span><span class="muted">(${c.n})</span>`;
+    div.onclick=()=>{ state.role=c.k; render(); };
+    wrap.appendChild(div);
+  });
+}
+
+function renderMeta(filtered){
+  const tot = DATA.length;
+  const cur = filtered.length;
+  const added = DATA.filter(x=>x.ceduto_da).length;
+  el("meta").innerHTML = `
+    <span>Totale in lista: <b>${tot}</b></span>
+    <span>Visibili con filtri: <b>${cur}</b></span>
+    <span>Ceduti reinseriti: <b>${added}</b></span>
+    <span class="muted">Ordinamento: ${state.sortKey} (${state.sortDir})</span>
+  `;
+}
+
+function renderSortIcons(){
+  ["ruolo","nome","pgv","mv","fm","qi","qa"].forEach(k=>{
+    const s = el("s_"+k);
+    if(!s) return;
+    s.textContent = (state.sortKey===k) ? (state.sortDir==="asc"?"▲":"▼") : "";
+  });
+}
+
+function rowTagCeduto(x){
+  if(!x.ceduto_da) return "";
+  return `<span class="tag good" title="Rientrato dai ceduti">CEDUTO: ${x.ceduto_da}</span>`;
+}
+
+function renderTable(filteredSorted){
+  const tb = el("tb");
+  tb.innerHTML = "";
+  filteredSorted.forEach(x=>{
+    const tr = document.createElement("tr");
+    tr.innerHTML = `
+      <td><span class="role ${x.ruolo}">${x.ruolo}</span></td>
+      <td>
+        <div class="name">
+          <div class="main">${x.nome} ${rowTagCeduto(x)}</div>
+          <div class="sub">${x.squadra || "–"}${x.under ? " · Under "+x.under : ""}</div>
+        </div>
+      </td>
+      <td>${x.pgv ?? "–"}</td>
+      <td>${fmt(x.mv,2)}</td>
+      <td>${fmt(x.fm,2)}</td>
+      <td>${x.qi ?? "–"}</td>
+      <td>${x.qa ?? "–"}</td>
+    `;
+    tb.appendChild(tr);
+  });
+}
+
+function downloadCSV(rows){
+  const headers = ["R","Nome","Squadra","Under","PGv","MV","FM","Qi","Qa","Ceduto_da"];
+  const esc = (v)=>('"'+String(v??"").replaceAll('"','""')+'"');
+  const lines = [headers.join(",")].concat(rows.map(r=>[
+    r.ruolo, r.nome, r.squadra, r.under, r.pgv,
+    (r.mv??""), (r.fm??""), (r.qi??""), (r.qa??""), (r.ceduto_da??"")
+  ].map(esc).join(",")));
+  const blob = new Blob([lines.join("\n")], {type:"text/csv;charset=utf-8;"});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "svincolati_wendy.csv";
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+}
+
+function renderCedutiQA(){
+  const ulE = el("ulExcluded");
+  ulE.innerHTML = "";
+  if(!CEDUTI_EXCLUDED_STAR.length){
+    ulE.innerHTML = `<li class="muted">Nessuno</li>`;
+  } else {
+    CEDUTI_EXCLUDED_STAR.forEach(x=>{
+      const li=document.createElement("li");
+      li.textContent = `${x.team}: ${x.nome} (marcato *)`;
+      ulE.appendChild(li);
+    });
+  }
+
+  const ulU = el("ulUnmatched");
+  ulU.innerHTML = "";
+  if(!CEDUTI_UNMATCHED.length){
+    ulU.innerHTML = `<li class="muted">Nessuno</li>`;
+  } else {
+    CEDUTI_UNMATCHED.forEach(x=>{
+      const li=document.createElement("li");
+      li.textContent = `${x.team}: ${x.nome} (non trovato / non in lista aggiornata)`;
+      ulU.appendChild(li);
+    });
+  }
+}
+
+function wire(){
+  el("q").addEventListener("input", e=>{ state.q = e.target.value; render(); });
+
+  // Toggle fuori lista
+  el("togFuori").addEventListener("click", ()=>{
+    state.showFuori = !state.showFuori;
+    el("togFuori").classList.toggle("on", state.showFuori);
+    render();
+  });
+
+  el("selUnder").addEventListener("change", e=>{ state.under = e.target.value; render(); });
+
+  ["pgMin","pgMax","qMin","qMax"].forEach(id=>{
+    el(id).addEventListener("input", e=>{
+      state[id] = e.target.value;
+      // clamp
+      if(Number(state.pgMin) > Number(state.pgMax)) state.pgMax = state.pgMin;
+      if(Number(state.qMin) > Number(state.qMax)) state.qMax = state.qMin;
+      el("pgMax").value = state.pgMax;
+      el("qMax").value = state.qMax;
+      render();
+    });
+  });
+
+  el("btnReset").addEventListener("click", ()=>{
+    state.q=""; el("q").value="";
+    state.role="ALL";
+    state.under="ALL"; el("selUnder").value="ALL";
+    state.showFuori=false; el("togFuori").classList.remove("on");
+    computeBounds();
+    state.sortKey="ruolo"; state.sortDir="asc";
+    render();
+  });
+
+  el("btnDownload").addEventListener("click", ()=>{
+    const filtered = sortData(filterData());
+    downloadCSV(filtered);
+  });
+
+  // sorting
+  document.querySelectorAll("thead th").forEach(th=>{
+    th.addEventListener("click", ()=>{
+      const k = th.getAttribute("data-k");
+      if(!k) return;
+      if(state.sortKey === k){
+        state.sortDir = (state.sortDir==="asc") ? "desc" : "asc";
+      } else {
+        state.sortKey = k;
+        state.sortDir = "asc";
+      }
+      render();
+    });
+  });
+}
+
+function render(){
+  renderRoleChips();
+  const filtered = filterData();
+  const sorted = sortData(filtered);
+  renderMeta(filtered);
+  renderSortIcons();
+  renderTable(sorted);
+}
+
+computeBounds();
+wire();
+renderCedutiQA();
+render();
+</script>
+</body>
+</html>
