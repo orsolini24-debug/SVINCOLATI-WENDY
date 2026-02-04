@@ -2,122 +2,247 @@
 <html lang="it">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Fantacalcio Wendy — Svincolati</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Svincolati Wendy</title>
   <style>
-    :root { --bg:#0b0c10; --card:#12131a; --text:#e8e8ea; --muted:#a7a7b3; --line:#262836; --accent:#6ee7b7; }
-    body { margin:0; font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; background:var(--bg); color:var(--text); }
-    header { padding:18px 18px 10px; border-bottom:1px solid var(--line); position:sticky; top:0; background:rgba(11,12,16,.92); backdrop-filter: blur(8px); }
-    h1 { margin:0 0 10px; font-size:18px; font-weight:650; letter-spacing:.2px; }
-    .controls { display:grid; grid-template-columns: 1.3fr .6fr .8fr .6fr; gap:10px; align-items:end; }
-    .ctrl { display:flex; flex-direction:column; gap:6px; }
-    label { font-size:12px; color:var(--muted); }
-    input, select { width:100%; padding:10px 10px; border-radius:10px; border:1px solid var(--line); background:var(--card); color:var(--text); outline:none; }
-    input:focus, select:focus { border-color: rgba(110,231,183,.5); box-shadow: 0 0 0 3px rgba(110,231,183,.12); }
-    main { padding:14px 18px 28px; }
-    .meta { display:flex; gap:12px; align-items:center; justify-content:space-between; margin:10px 0 12px; color:var(--muted); font-size:12px; }
-    .pill { padding:6px 10px; border:1px solid var(--line); border-radius:999px; background:var(--card); }
-    .tableWrap { border:1px solid var(--line); border-radius:14px; overflow:hidden; background:var(--card); }
-    table { width:100%; border-collapse:collapse; }
-    th, td { padding:10px 10px; border-bottom:1px solid var(--line); font-size:13px; }
-    th { position:sticky; top:92px; background:rgba(18,19,26,.96); backdrop-filter: blur(8px); text-align:left; cursor:pointer; user-select:none; }
-    th .hint { color:var(--muted); font-weight:500; margin-left:6px; font-size:11px; }
-    tr:hover td { background: rgba(110,231,183,.06); }
-    .right { text-align:right; }
-    .muted { color:var(--muted); }
-    .pager { display:flex; gap:8px; align-items:center; justify-content:flex-end; padding:10px; }
-    button { padding:8px 10px; border-radius:10px; border:1px solid var(--line); background:transparent; color:var(--text); cursor:pointer; }
-    button:disabled { opacity:.45; cursor:not-allowed; }
-    .small { font-size:12px; color:var(--muted); }
-    .warn { margin-top:10px; padding:10px 12px; border:1px dashed rgba(110,231,183,.45); border-radius:12px; color:var(--muted); }
-    @media (max-width: 900px){
-      .controls { grid-template-columns: 1fr 1fr; }
-      th { top: 140px; }
+    :root{
+      --bg:#0b1020;
+      --panel:rgba(255,255,255,0.08);
+      --line:rgba(255,255,255,0.12);
+      --text:rgba(255,255,255,0.92);
+      --muted:rgba(255,255,255,0.68);
+      --brand1:#2f78ff;
+      --brand2:#53d1ff;
+      --good:#3ddc97;
+      --warn:#ffd166;
+      --bad:#ff5c7a;
+      --shadow:0 12px 30px rgba(0,0,0,0.35);
+      --radius:16px;
+      --font:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
     }
+    *{box-sizing:border-box;}
+    body{
+      margin:0;
+      font-family:var(--font);
+      background:
+        radial-gradient(1200px 600px at 20% -10%, rgba(47,120,255,0.35), transparent 55%),
+        radial-gradient(900px 500px at 90% 0%, rgba(83,209,255,0.22), transparent 60%),
+        linear-gradient(180deg, #070a14 0%, var(--bg) 50%, #060814 100%);
+      color:var(--text);
+    }
+    header{
+      position:sticky; top:0; z-index:20;
+      backdrop-filter:blur(10px);
+      background:linear-gradient(90deg, rgba(47,120,255,0.35), rgba(83,209,255,0.18));
+      border-bottom:1px solid var(--line);
+    }
+    .wrap{max-width:1200px; margin:0 auto; padding:18px;}
+    .titleRow{display:flex; align-items:center; justify-content:space-between; gap:16px;}
+    h1{margin:0; font-size:22px; letter-spacing:0.2px;}
+    .pill{
+      padding:6px 10px; border:1px solid var(--line);
+      background:rgba(0,0,0,0.18);
+      border-radius:999px; color:var(--muted); font-size:12px;
+      display:inline-flex; align-items:center; gap:8px; white-space:nowrap;
+    }
+    .grid{display:grid; grid-template-columns:1fr; gap:12px; margin-top:14px;}
+    .panel{
+      background:var(--panel); border:1px solid var(--line);
+      border-radius:var(--radius); box-shadow:var(--shadow); padding:14px;
+    }
+    .controls{
+      display:grid; grid-template-columns:1.4fr 1fr 1fr auto;
+      gap:10px; align-items:end;
+    }
+    @media (max-width:980px){ .controls{grid-template-columns:1fr;} }
+    label{display:block; font-size:12px; color:var(--muted); margin-bottom:6px;}
+    input[type="text"], input[type="number"]{
+      width:100%; padding:10px 12px; border-radius:12px;
+      border:1px solid var(--line); background:rgba(0,0,0,0.22);
+      color:var(--text); outline:none;
+    }
+    .row{display:grid; grid-template-columns:1fr 1fr; gap:10px;}
+    .roleChips{display:flex; gap:8px; flex-wrap:wrap; padding-top:2px;}
+    .chip{
+      border:1px solid var(--line); background:rgba(0,0,0,0.18);
+      color:var(--muted); padding:8px 10px; border-radius:999px;
+      cursor:pointer; user-select:none; font-size:12px; transition:120ms ease;
+    }
+    .chip[data-on="true"]{
+      color:var(--text);
+      border-color:rgba(83,209,255,0.55);
+      background:rgba(83,209,255,0.12);
+    }
+    .btn{
+      padding:10px 12px; border-radius:12px;
+      border:1px solid var(--line); background:rgba(0,0,0,0.22);
+      color:var(--text); cursor:pointer; transition:120ms ease; white-space:nowrap;
+    }
+    .btn:hover{border-color:rgba(83,209,255,0.6);}
+    .meta{
+      display:flex; align-items:center; justify-content:space-between; gap:10px;
+      margin-top:10px; color:var(--muted); font-size:12px;
+    }
+    .tableWrap{
+      overflow:auto; border-radius:var(--radius); border:1px solid var(--line);
+      background:rgba(0,0,0,0.18);
+    }
+    table{width:100%; border-collapse:collapse; min-width:820px;}
+    thead th{
+      position:sticky; top:0;
+      background:rgba(10,14,30,0.95);
+      border-bottom:1px solid var(--line);
+      text-align:left; font-size:12px; color:var(--muted);
+      padding:10px 10px; cursor:pointer; user-select:none;
+    }
+    tbody td{
+      border-bottom:1px solid rgba(255,255,255,0.06);
+      padding:10px 10px; font-size:13px;
+    }
+    tbody tr:hover{background:rgba(83,209,255,0.06);}
+    .roleBadge{
+      width:22px; height:22px; display:inline-flex; align-items:center; justify-content:center;
+      border-radius:999px; font-weight:700; font-size:12px; border:1px solid var(--line);
+    }
+    .role-P{background:rgba(255,209,102,0.14); color:#ffd166; border-color:rgba(255,209,102,0.35);}
+    .role-D{background:rgba(61,220,151,0.14); color:#3ddc97; border-color:rgba(61,220,151,0.35);}
+    .role-C{background:rgba(83,209,255,0.14); color:#53d1ff; border-color:rgba(83,209,255,0.35);}
+    .role-A{background:rgba(255,92,122,0.14); color:#ff5c7a; border-color:rgba(255,92,122,0.35);}
+    .num{text-align:right; font-variant-numeric:tabular-nums;}
+    .nameCell{display:flex; flex-direction:column; gap:2px; line-height:1.15;}
+    .nameCell .sub{font-size:12px; color:var(--muted);}
+    .sortHint{opacity:0.65; margin-left:6px; font-size:11px;}
+    .err{padding:10px 12px; border-radius:12px; border:1px dashed rgba(255,92,122,0.45); color:#ffd2da; background:rgba(255,92,122,0.08);}
   </style>
 </head>
 
 <body>
   <header>
-    <h1>Fantacalcio Wendy — Lista svincolati</h1>
-    <div class="controls">
-      <div class="ctrl">
-        <label for="q">Ricerca (nome, squadra, ruolo, valori…)</label>
-        <input id="q" type="search" placeholder="Es. 'lautaro', 'Inter', 'A', '7.1'..." />
+    <div class="wrap">
+      <div class="titleRow">
+        <h1>Svincolati Wendy</h1>
+        <div class="pill" title="Dataset caricato dal file CSV nel repository">
+          <span>Dataset:</span>
+          <strong id="datasetCount">0</strong>
+          <span>giocatori</span>
+        </div>
       </div>
 
-      <div class="ctrl">
-        <label for="role">Ruolo</label>
-        <select id="role">
-          <option value="">Tutti</option>
-        </select>
-      </div>
+      <div class="grid">
+        <div class="panel">
+          <div class="controls">
+            <div>
+              <label for="q">Cerca (nome o squadra)</label>
+              <input id="q" type="text" placeholder="Es. Lookman, Inter, Roma..." />
+            </div>
 
-      <div class="ctrl">
-        <label for="team">Squadra</label>
-        <select id="team">
-          <option value="">Tutte</option>
-        </select>
-      </div>
+            <div>
+              <label>Filtro PGv (min/max)</label>
+              <div class="row">
+                <input id="pgvMin" type="number" min="0" step="1" placeholder="0" />
+                <input id="pgvMax" type="number" min="0" step="1" placeholder="999" />
+              </div>
+            </div>
 
-      <div class="ctrl">
-        <label for="pageSize">Righe/pagina</label>
-        <select id="pageSize">
-          <option>25</option>
-          <option>50</option>
-          <option>100</option>
-          <option>200</option>
-        </select>
+            <div>
+              <label>Filtro MV (min/max)</label>
+              <div class="row">
+                <input id="mvMin" type="number" step="0.01" placeholder="0.00" />
+                <input id="mvMax" type="number" step="0.01" placeholder="10.00" />
+              </div>
+            </div>
+
+            <div style="display:flex; gap:10px; justify-content:flex-end; align-items:end;">
+              <button class="btn" id="resetBtn">Reset</button>
+              <button class="btn" id="downloadBtn" title="Scarica la lista filtrata in CSV">Scarica CSV</button>
+            </div>
+
+            <div style="grid-column: 1 / -1;">
+              <label>Ruolo</label>
+              <div class="roleChips" id="roleChips">
+                <div class="chip" data-role="P" data-on="true">P</div>
+                <div class="chip" data-role="D" data-on="true">D</div>
+                <div class="chip" data-role="C" data-on="true">C</div>
+                <div class="chip" data-role="A" data-on="true">A</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="meta">
+            <div>Mostrati: <strong id="shownCount">0</strong></div>
+            <div>Ordinamento: <strong id="sortState">Nessuno</strong></div>
+          </div>
+
+          <div id="loadError" class="err" style="display:none; margin-top:10px;"></div>
+        </div>
+
+        <div class="panel">
+          <div class="tableWrap">
+            <table id="tbl">
+              <thead>
+                <tr>
+                  <th data-key="ruolo">R<span class="sortHint" id="h_ruolo"></span></th>
+                  <th data-key="nome">Nome<span class="sortHint" id="h_nome"></span></th>
+                  <th data-key="pgv" style="text-align:right;">PGv<span class="sortHint" id="h_pgv"></span></th>
+                  <th data-key="mv" style="text-align:right;">MV<span class="sortHint" id="h_mv"></span></th>
+                  <th data-key="fm" style="text-align:right;">FM<span class="sortHint" id="h_fm"></span></th>
+                </tr>
+              </thead>
+              <tbody id="tbody"></tbody>
+            </table>
+          </div>
+        </div>
       </div>
     </div>
   </header>
 
-  <main>
-    <div class="meta">
-      <div class="pill" id="status">Caricamento dati…</div>
-      <div class="small" id="sortInfo"></div>
-    </div>
-
-    <div class="tableWrap">
-      <table id="tbl">
-        <thead>
-          <tr id="theadRow"></tr>
-        </thead>
-        <tbody id="tbody"></tbody>
-      </table>
-
-      <div class="pager">
-        <span class="small" id="count"></span>
-        <button id="prev">◀</button>
-        <span class="small" id="page"></span>
-        <button id="next">▶</button>
-      </div>
-    </div>
-
-    <div class="warn">
-      Nota: questa pagina legge <b>svincolati_wendy.csv</b> dalla stessa cartella.
-      Per GitHub Pages: metti <b>index.html</b> e <b>svincolati_wendy.csv</b> nello stesso repo (root) e abilita Pages.
-    </div>
-  </main>
-
   <script>
-    // ===== CONFIG =====
-    const CSV_PATH = "./svincolati_wendy.csv"; // stesso repo/cartella
-    const DEFAULT_SORT = { key: "FM", dir: "desc" }; // se la colonna esiste
+    // Deve esistere nel repo (stessa cartella di index.html)
+    const CSV_PATH = "./svincolati_wendy.csv";
 
-    // ===== STATE =====
-    let raw = [];
-    let filtered = [];
-    let columns = [];
-    let sortState = { key: null, dir: "asc" };
-    let pageState = { page: 1, pageSize: 25 };
+    let DATA = [];
 
-    const el = (id) => document.getElementById(id);
+    const state = {
+      q: "",
+      roles: new Set(["P","D","C","A"]),
+      pgvMin: null,
+      pgvMax: null,
+      mvMin: null,
+      mvMax: null,
+      sortKey: "fm",   // default: FM desc (più utile)
+      sortDir: -1,
+    };
 
-    // ===== CSV PARSER (robusto abbastanza per export standard) =====
-    function parseCSV(text) {
-      // Gestisce virgola o ; in automatico (prende il separatore più frequente nella prima riga)
-      const firstLine = text.split(/\r?\n/).find(l => l.trim().length > 0) || "";
+    const el = {
+      datasetCount: document.getElementById("datasetCount"),
+      shownCount: document.getElementById("shownCount"),
+      sortState: document.getElementById("sortState"),
+      q: document.getElementById("q"),
+      pgvMin: document.getElementById("pgvMin"),
+      pgvMax: document.getElementById("pgvMax"),
+      mvMin: document.getElementById("mvMin"),
+      mvMax: document.getElementById("mvMax"),
+      tbody: document.getElementById("tbody"),
+      resetBtn: document.getElementById("resetBtn"),
+      downloadBtn: document.getElementById("downloadBtn"),
+      roleChips: document.getElementById("roleChips"),
+      table: document.getElementById("tbl"),
+      loadError: document.getElementById("loadError"),
+    };
+
+    function norm(s){ return (s ?? "").toString().trim().toLowerCase(); }
+
+    function parseNum(v){
+      if (v === "" || v === null || v === undefined) return null;
+      // supporta decimali con virgola
+      const s = v.toString().trim().replace(",", ".");
+      const n = Number(s);
+      return Number.isFinite(n) ? n : null;
+    }
+
+    // Parser CSV semplice ma robusto (virgola o ;, gestisce virgolette)
+    function parseCSV(text){
+      const firstLine = text.split(/\r?\n/).find(l => l.trim().length>0) || "";
       const comma = (firstLine.match(/,/g) || []).length;
       const semi  = (firstLine.match(/;/g) || []).length;
       const sep = semi > comma ? ";" : ",";
@@ -127,245 +252,263 @@
       let cur = "";
       let inQuotes = false;
 
-      for (let i = 0; i < text.length; i++) {
+      for (let i=0;i<text.length;i++){
         const c = text[i];
         const n = text[i+1];
 
-        if (c === '"' && inQuotes && n === '"') { cur += '"'; i++; continue; }
-        if (c === '"') { inQuotes = !inQuotes; continue; }
+        if (c === '"' && inQuotes && n === '"'){ cur += '"'; i++; continue; }
+        if (c === '"'){ inQuotes = !inQuotes; continue; }
 
-        if (!inQuotes && (c === "\n" || c === "\r")) {
+        if (!inQuotes && (c === "\n" || c === "\r")){
           if (c === "\r" && n === "\n") i++;
-          row.push(cur);
-          rows.push(row);
-          row = [];
-          cur = "";
+          row.push(cur); rows.push(row);
+          row = []; cur = "";
           continue;
         }
 
-        if (!inQuotes && c === sep) {
-          row.push(cur);
-          cur = "";
+        if (!inQuotes && c === sep){
+          row.push(cur); cur = "";
           continue;
         }
 
         cur += c;
       }
-      if (cur.length || row.length) { row.push(cur); rows.push(row); }
-
-      // Trim celle
-      return rows.map(r => r.map(v => (v ?? "").trim()));
+      if (cur.length || row.length){ row.push(cur); rows.push(row); }
+      return rows.map(r => r.map(x => (x ?? "").trim()));
     }
 
-    function toNumberMaybe(v) {
-      if (v == null) return null;
-      const s = String(v).trim();
-      if (!s) return null;
-      // supporta virgola decimale italiana
-      const norm = s.replace(/\./g, "").replace(",", ".");
-      const num = Number(norm);
-      return Number.isFinite(num) ? num : null;
-    }
-
-    function buildTableHeader() {
-      const tr = el("theadRow");
-      tr.innerHTML = "";
-      columns.forEach(col => {
-        const th = document.createElement("th");
-        th.textContent = col;
-        const hint = document.createElement("span");
-        hint.className = "hint";
-        hint.textContent = "↕";
-        th.appendChild(hint);
-        th.addEventListener("click", () => toggleSort(col));
-        tr.appendChild(th);
-      });
-    }
-
-    function render() {
-      applyFilters();
-      applySort();
-      paginate();
-      updateMeta();
-    }
-
-    function applyFilters() {
-      const q = el("q").value.trim().toLowerCase();
-      const role = el("role").value;
-      const team = el("team").value;
-
-      filtered = raw.filter(r => {
-        if (role && (r["R."] ?? r["Ruolo"] ?? "") !== role) return false;
-        if (team && (r["Sq."] ?? r["Squadra"] ?? "") !== team) return false;
-
-        if (!q) return true;
-        // ricerca full text su tutte le colonne
-        for (const k of columns) {
-          const v = r[k];
-          if (v != null && String(v).toLowerCase().includes(q)) return true;
+    // Mappa colonne CSV -> campi standard
+    function mapRow(obj){
+      const get = (...keys) => {
+        for (const k of keys){
+          if (k in obj) return obj[k];
         }
-        return false;
-      });
+        // fallback: cerca chiave case-insensitive
+        const lowerKeys = Object.keys(obj).reduce((acc, kk) => (acc[kk.toLowerCase()] = kk, acc), {});
+        for (const k of keys){
+          const hit = lowerKeys[k.toLowerCase()];
+          if (hit) return obj[hit];
+        }
+        return "";
+      };
 
-      // se filtri cambiano, rientra in pagina 1
-      pageState.page = 1;
+      const nome = get("Nome", "nome");
+      const squadra = get("Sq.", "Squadra", "squadra");
+      const ruolo = get("R.", "Ruolo", "ruolo");
+      const pgv = parseNum(get("PGv", "Pgv", "pgv", "PGV"));
+      const mv = parseNum(get("MV", "Mv", "mv"));
+      const fm = parseNum(get("FM", "Fm", "fm"));
+
+      return {
+        nome: (nome ?? "").toString().trim(),
+        squadra: (squadra ?? "").toString().trim(),
+        ruolo: (ruolo ?? "").toString().trim(),
+        pgv: pgv ?? 0,
+        mv: mv ?? 0,
+        fm: fm ?? 0,
+      };
     }
 
-    function applySort() {
-      const { key, dir } = sortState.key ? sortState : DEFAULT_SORT;
-      const actualKey = columns.includes(key) ? key : (sortState.key || columns[0]);
+    function passesFilters(row){
+      if (!state.roles.has(row.ruolo)) return false;
 
-      sortState.key = actualKey;
-      sortState.dir = sortState.dir || (DEFAULT_SORT.dir || "asc");
-
-      const m = sortState.dir === "asc" ? 1 : -1;
-
-      filtered.sort((a,b) => {
-        const av = a[actualKey];
-        const bv = b[actualKey];
-
-        const an = toNumberMaybe(av);
-        const bn = toNumberMaybe(bv);
-
-        if (an != null && bn != null) return (an - bn) * m;
-
-        const as = (av ?? "").toString().toLowerCase();
-        const bs = (bv ?? "").toString().toLowerCase();
-        if (as < bs) return -1 * m;
-        if (as > bs) return  1 * m;
-        return 0;
-      });
-    }
-
-    function paginate() {
-      const tbody = el("tbody");
-      tbody.innerHTML = "";
-
-      const start = (pageState.page - 1) * pageState.pageSize;
-      const end = start + pageState.pageSize;
-      const slice = filtered.slice(start, end);
-
-      for (const r of slice) {
-        const tr = document.createElement("tr");
-        columns.forEach(col => {
-          const td = document.createElement("td");
-          const v = r[col];
-
-          // allinea numerici a destra se sembrano numeri
-          const n = toNumberMaybe(v);
-          if (n != null) td.classList.add("right");
-
-          td.textContent = (v ?? "").toString();
-          tr.appendChild(td);
-        });
-        tbody.appendChild(tr);
+      if (state.q){
+        const hay = norm(row.nome) + " " + norm(row.squadra);
+        if (!hay.includes(state.q)) return false;
       }
 
-      const totalPages = Math.max(1, Math.ceil(filtered.length / pageState.pageSize));
-      el("prev").disabled = pageState.page <= 1;
-      el("next").disabled = pageState.page >= totalPages;
-      el("page").textContent = `Pagina ${pageState.page} / ${totalPages}`;
-      el("count").textContent = `Risultati: ${filtered.length}`;
+      if (state.pgvMin !== null && row.pgv < state.pgvMin) return false;
+      if (state.pgvMax !== null && row.pgv > state.pgvMax) return false;
+
+      if (state.mvMin !== null && row.mv < state.mvMin) return false;
+      if (state.mvMax !== null && row.mv > state.mvMax) return false;
+
+      return true;
     }
 
-    function updateMeta() {
-      el("status").textContent = `Dataset: ${raw.length} righe — Svincolati Wendy`;
-      el("sortInfo").textContent = sortState.key ? `Ordine: ${sortState.key} (${sortState.dir})` : "";
-    }
-
-    function toggleSort(col) {
-      if (sortState.key === col) {
-        sortState.dir = sortState.dir === "asc" ? "desc" : "asc";
-      } else {
-        sortState.key = col;
-        sortState.dir = "asc";
+    function compare(a,b,key){
+      const va = a[key];
+      const vb = b[key];
+      if (typeof va === "string" || typeof vb === "string"){
+        return norm(va).localeCompare(norm(vb), "it");
       }
+      return (va ?? 0) - (vb ?? 0);
+    }
+
+    function applySort(rows){
+      if (!state.sortKey) return rows;
+      const key = state.sortKey;
+      const dir = state.sortDir;
+      return [...rows].sort((a,b) => dir * compare(a,b,key));
+    }
+
+    function render(){
+      el.datasetCount.textContent = DATA.length.toString();
+
+      let rows = DATA.filter(passesFilters);
+      rows = applySort(rows);
+
+      el.shownCount.textContent = rows.length.toString();
+
+      el.tbody.innerHTML = rows.map(r => {
+        const roleClass = "roleBadge role-" + r.ruolo;
+        const mv = (r.mv ?? 0).toFixed(2);
+        const fm = (r.fm ?? 0).toFixed(2);
+        return `
+          <tr>
+            <td><span class="${roleClass}">${r.ruolo}</span></td>
+            <td>
+              <div class="nameCell">
+                <div><strong>${escapeHtml(r.nome)}</strong></div>
+                <div class="sub">${escapeHtml(r.squadra)}</div>
+              </div>
+            </td>
+            <td class="num">${r.pgv}</td>
+            <td class="num">${mv}</td>
+            <td class="num">${fm}</td>
+          </tr>
+        `;
+      }).join("");
+
+      ["ruolo","nome","pgv","mv","fm"].forEach(k => {
+        const h = document.getElementById("h_" + k);
+        if (!h) return;
+        if (state.sortKey !== k) h.textContent = "";
+        else h.textContent = state.sortDir === 1 ? "▲" : "▼";
+      });
+
+      el.sortState.textContent = state.sortKey ? `${state.sortKey} ${state.sortDir===1 ? "asc" : "desc"}` : "Nessuno";
+    }
+
+    function escapeHtml(str){
+      return (str ?? "").toString()
+        .replaceAll("&","&amp;")
+        .replaceAll("<","&lt;")
+        .replaceAll(">","&gt;")
+        .replaceAll('"',"&quot;")
+        .replaceAll("'","&#039;");
+    }
+
+    function reset(){
+      state.q = "";
+      state.roles = new Set(["P","D","C","A"]);
+      state.pgvMin = null;
+      state.pgvMax = null;
+      state.mvMin = null;
+      state.mvMax = null;
+      state.sortKey = "fm";
+      state.sortDir = -1;
+
+      el.q.value = "";
+      el.pgvMin.value = "";
+      el.pgvMax.value = "";
+      el.mvMin.value = "";
+      el.mvMax.value = "";
+
+      [...el.roleChips.querySelectorAll(".chip")].forEach(ch => ch.dataset.on = "true");
       render();
     }
 
-    function populateFilters() {
-      // Ruoli e Squadre dipendono da come si chiamano le colonne nel tuo CSV:
-      const roleKey = columns.includes("R.") ? "R." : (columns.includes("Ruolo") ? "Ruolo" : null);
-      const teamKey = columns.includes("Sq.") ? "Sq." : (columns.includes("Squadra") ? "Squadra" : null);
+    function downloadCSV(){
+      let rows = DATA.filter(passesFilters);
+      rows = applySort(rows);
 
-      const roles = new Set();
-      const teams = new Set();
+      const headers = ["ruolo","nome","squadra","pgv","mv","fm"];
+      const lines = [headers.join(",")];
 
-      raw.forEach(r => {
-        if (roleKey && r[roleKey]) roles.add(r[roleKey]);
-        if (teamKey && r[teamKey]) teams.add(r[teamKey]);
-      });
+      for (const r of rows){
+        const vals = headers.map(h => {
+          const v = r[h];
+          const s = (v === null || v === undefined) ? "" : v.toString();
+          const escaped = s.replaceAll('"','""');
+          return `"${escaped}"`;
+        });
+        lines.push(vals.join(","));
+      }
 
-      const roleSel = el("role");
-      const teamSel = el("team");
-
-      const sortedRoles = Array.from(roles).sort();
-      const sortedTeams = Array.from(teams).sort();
-
-      sortedRoles.forEach(v => {
-        const o = document.createElement("option");
-        o.value = v; o.textContent = v;
-        roleSel.appendChild(o);
-      });
-
-      sortedTeams.forEach(v => {
-        const o = document.createElement("option");
-        o.value = v; o.textContent = v;
-        teamSel.appendChild(o);
-      });
+      const blob = new Blob([lines.join("\n")], { type: "text/csv;charset=utf-8" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "svincolati_wendy_filtrati.csv";
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
     }
 
-    async function init() {
-      try {
-        const res = await fetch(CSV_PATH, { cache: "no-store" });
-        if (!res.ok) throw new Error(`Impossibile leggere ${CSV_PATH} (HTTP ${res.status})`);
-        const text = await res.text();
+    el.q.addEventListener("input", (e) => {
+      state.q = norm(e.target.value);
+      render();
+    });
 
-        const rows = parseCSV(text).filter(r => r.some(c => c && c.trim().length > 0));
-        if (rows.length < 2) throw new Error("CSV vuoto o non valido");
-
-        columns = rows[0].map(c => c.trim());
-        raw = rows.slice(1).map(r => {
-          const obj = {};
-          columns.forEach((c, i) => obj[c] = (r[i] ?? "").trim());
-          return obj;
-        });
-
-        buildTableHeader();
-        populateFilters();
-
-        // listeners
-        el("q").addEventListener("input", () => render());
-        el("role").addEventListener("change", () => render());
-        el("team").addEventListener("change", () => render());
-        el("pageSize").addEventListener("change", (e) => {
-          pageState.pageSize = Number(e.target.value);
-          pageState.page = 1;
-          render();
-        });
-        el("prev").addEventListener("click", () => { pageState.page--; paginate(); });
-        el("next").addEventListener("click", () => { pageState.page++; paginate(); });
-
-        // default sort
-        if (columns.includes(DEFAULT_SORT.key)) {
-          sortState.key = DEFAULT_SORT.key;
-          sortState.dir = DEFAULT_SORT.dir;
-        } else {
-          sortState.key = columns[0];
-          sortState.dir = "asc";
-        }
-
+    [el.pgvMin, el.pgvMax, el.mvMin, el.mvMax].forEach(inp => {
+      inp.addEventListener("input", () => {
+        state.pgvMin = parseNum(el.pgvMin.value);
+        state.pgvMax = parseNum(el.pgvMax.value);
+        state.mvMin = parseNum(el.mvMin.value);
+        state.mvMax = parseNum(el.mvMax.value);
         render();
-      } catch (err) {
-        el("status").textContent = "Errore caricamento dati";
-        el("status").style.borderColor = "rgba(239,68,68,.5)";
-        el("status").style.color = "#fecaca";
+      });
+    });
+
+    el.resetBtn.addEventListener("click", reset);
+    el.downloadBtn.addEventListener("click", downloadCSV);
+
+    el.roleChips.addEventListener("click", (e) => {
+      const chip = e.target.closest(".chip");
+      if (!chip) return;
+      const role = chip.dataset.role;
+      const on = chip.dataset.on === "true";
+      chip.dataset.on = (!on).toString();
+      if (on) state.roles.delete(role);
+      else state.roles.add(role);
+      render();
+    });
+
+    el.table.querySelectorAll("thead th").forEach(th => {
+      th.addEventListener("click", () => {
+        const key = th.dataset.key;
+        if (!key) return;
+        if (state.sortKey === key) state.sortDir *= -1;
+        else { state.sortKey = key; state.sortDir = 1; }
+        render();
+      });
+    });
+
+    async function load(){
+      try{
+        const res = await fetch(CSV_PATH, { cache:"no-store" });
+        if (!res.ok) throw new Error(`Impossibile leggere ${CSV_PATH} (HTTP ${res.status}). Verifica nome file e path.`);
+        const text = await res.text();
+        const rows = parseCSV(text).filter(r => r.some(c => c && c.trim().length>0));
+        if (rows.length < 2) throw new Error("CSV vuoto o non valido.");
+
+        const headers = rows[0];
+        const body = rows.slice(1);
+
+        const objs = body.map(r => {
+          const o = {};
+          headers.forEach((h,i) => o[h] = (r[i] ?? "").trim());
+          return o;
+        });
+
+        DATA = objs.map(mapRow);
+
+        // sanity check: ruoli validi
+        const valid = new Set(["P","D","C","A"]);
+        DATA = DATA.filter(x => valid.has((x.ruolo||"").trim()));
+
+        el.loadError.style.display = "none";
+        render();
+      }catch(err){
+        el.loadError.style.display = "block";
+        el.loadError.textContent = String(err.message || err);
         console.error(err);
-        alert(String(err.message || err));
       }
     }
 
-    init();
+    load();
   </script>
 </body>
 </html>
