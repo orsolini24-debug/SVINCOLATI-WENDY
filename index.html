@@ -13,12 +13,12 @@
       --muted:rgba(255,255,255,0.68);
       --brand1:#2f78ff;
       --brand2:#53d1ff;
-      --good:#3ddc97;
-      --warn:#ffd166;
-      --bad:#ff5c7a;
       --shadow:0 12px 30px rgba(0,0,0,0.35);
       --radius:16px;
       --font:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
+      --good:#3ddc97;
+      --warn:#ffd166;
+      --bad:#ff5c7a;
     }
     *{box-sizing:border-box;}
     body{
@@ -112,7 +112,7 @@
     .nameCell{display:flex; flex-direction:column; gap:2px; line-height:1.15;}
     .nameCell .sub{font-size:12px; color:var(--muted);}
     .sortHint{opacity:0.65; margin-left:6px; font-size:11px;}
-    .err{padding:10px 12px; border-radius:12px; border:1px dashed rgba(255,92,122,0.45); color:#ffd2da; background:rgba(255,92,122,0.08);}
+    .err{margin-top:10px; padding:10px 12px; border-radius:12px; border:1px dashed rgba(255,92,122,0.45); color:#ffd2da; background:rgba(255,92,122,0.08);}
   </style>
 </head>
 
@@ -121,7 +121,7 @@
     <div class="wrap">
       <div class="titleRow">
         <h1>Svincolati Wendy</h1>
-        <div class="pill" title="Dataset caricato dal file CSV nel repository">
+        <div class="pill" title="Dataset caricato dal CSV nel repository">
           <span>Dataset:</span>
           <strong id="datasetCount">0</strong>
           <span>giocatori</span>
@@ -170,10 +170,10 @@
 
           <div class="meta">
             <div>Mostrati: <strong id="shownCount">0</strong></div>
-            <div>Ordinamento: <strong id="sortState">Nessuno</strong></div>
+            <div>Ordinamento: <strong id="sortState">FM desc</strong></div>
           </div>
 
-          <div id="loadError" class="err" style="display:none; margin-top:10px;"></div>
+          <div id="loadError" class="err" style="display:none;"></div>
         </div>
 
         <div class="panel">
@@ -197,9 +197,7 @@
   </header>
 
   <script>
-    // Deve esistere nel repo (stessa cartella di index.html)
     const CSV_PATH = "./svincolati_wendy.csv";
-
     let DATA = [];
 
     const state = {
@@ -209,8 +207,8 @@
       pgvMax: null,
       mvMin: null,
       mvMax: null,
-      sortKey: "fm",   // default: FM desc (più utile)
-      sortDir: -1,
+      sortKey: "fm",
+      sortDir: -1, // desc
     };
 
     const el = {
@@ -231,16 +229,21 @@
     };
 
     function norm(s){ return (s ?? "").toString().trim().toLowerCase(); }
-
     function parseNum(v){
       if (v === "" || v === null || v === undefined) return null;
-      // supporta decimali con virgola
       const s = v.toString().trim().replace(",", ".");
       const n = Number(s);
       return Number.isFinite(n) ? n : null;
     }
+    function escapeHtml(str){
+      return (str ?? "").toString()
+        .replaceAll("&","&amp;")
+        .replaceAll("<","&lt;")
+        .replaceAll(">","&gt;")
+        .replaceAll('"',"&quot;")
+        .replaceAll("'","&#039;");
+    }
 
-    // Parser CSV semplice ma robusto (virgola o ;, gestisce virgolette)
     function parseCSV(text){
       const firstLine = text.split(/\r?\n/).find(l => l.trim().length>0) || "";
       const comma = (firstLine.match(/,/g) || []).length;
@@ -277,27 +280,23 @@
       return rows.map(r => r.map(x => (x ?? "").trim()));
     }
 
-    // Mappa colonne CSV -> campi standard
     function mapRow(obj){
+      const lowerMap = Object.keys(obj).reduce((acc,k)=> (acc[k.toLowerCase()]=k, acc), {});
       const get = (...keys) => {
         for (const k of keys){
           if (k in obj) return obj[k];
-        }
-        // fallback: cerca chiave case-insensitive
-        const lowerKeys = Object.keys(obj).reduce((acc, kk) => (acc[kk.toLowerCase()] = kk, acc), {});
-        for (const k of keys){
-          const hit = lowerKeys[k.toLowerCase()];
+          const hit = lowerMap[k.toLowerCase()];
           if (hit) return obj[hit];
         }
         return "";
       };
 
-      const nome = get("Nome", "nome");
-      const squadra = get("Sq.", "Squadra", "squadra");
-      const ruolo = get("R.", "Ruolo", "ruolo");
-      const pgv = parseNum(get("PGv", "Pgv", "pgv", "PGV"));
-      const mv = parseNum(get("MV", "Mv", "mv"));
-      const fm = parseNum(get("FM", "Fm", "fm"));
+      const nome = get("Nome","nome");
+      const squadra = get("Sq.","Squadra","squadra");
+      const ruolo = get("R.","Ruolo","ruolo");
+      const pgv = parseNum(get("PGv","Pgv","pgv","PGV"));
+      const mv  = parseNum(get("MV","Mv","mv"));
+      const fm  = parseNum(get("FM","Fm","fm"));
 
       return {
         nome: (nome ?? "").toString().trim(),
@@ -305,7 +304,7 @@
         ruolo: (ruolo ?? "").toString().trim(),
         pgv: pgv ?? 0,
         mv: mv ?? 0,
-        fm: fm ?? 0,
+        fm: fm ?? 0
       };
     }
 
@@ -352,8 +351,6 @@
 
       el.tbody.innerHTML = rows.map(r => {
         const roleClass = "roleBadge role-" + r.ruolo;
-        const mv = (r.mv ?? 0).toFixed(2);
-        const fm = (r.fm ?? 0).toFixed(2);
         return `
           <tr>
             <td><span class="${roleClass}">${r.ruolo}</span></td>
@@ -364,8 +361,8 @@
               </div>
             </td>
             <td class="num">${r.pgv}</td>
-            <td class="num">${mv}</td>
-            <td class="num">${fm}</td>
+            <td class="num">${(r.mv ?? 0).toFixed(2)}</td>
+            <td class="num">${(r.fm ?? 0).toFixed(2)}</td>
           </tr>
         `;
       }).join("");
@@ -377,16 +374,7 @@
         else h.textContent = state.sortDir === 1 ? "▲" : "▼";
       });
 
-      el.sortState.textContent = state.sortKey ? `${state.sortKey} ${state.sortDir===1 ? "asc" : "desc"}` : "Nessuno";
-    }
-
-    function escapeHtml(str){
-      return (str ?? "").toString()
-        .replaceAll("&","&amp;")
-        .replaceAll("<","&lt;")
-        .replaceAll(">","&gt;")
-        .replaceAll('"',"&quot;")
-        .replaceAll("'","&#039;");
+      el.sortState.textContent = state.sortKey ? `${state.sortKey.toUpperCase()} ${state.sortDir===1 ? "asc" : "desc"}` : "Nessuno";
     }
 
     function reset(){
@@ -437,10 +425,7 @@
       URL.revokeObjectURL(url);
     }
 
-    el.q.addEventListener("input", (e) => {
-      state.q = norm(e.target.value);
-      render();
-    });
+    el.q.addEventListener("input", (e) => { state.q = norm(e.target.value); render(); });
 
     [el.pgvMin, el.pgvMax, el.mvMin, el.mvMax].forEach(inp => {
       inp.addEventListener("input", () => {
@@ -478,8 +463,8 @@
 
     async function load(){
       try{
-        const res = await fetch(CSV_PATH, { cache:"no-store" });
-        if (!res.ok) throw new Error(`Impossibile leggere ${CSV_PATH} (HTTP ${res.status}). Verifica nome file e path.`);
+        const res = await fetch(CSV_PATH + "?v=" + Date.now(), { cache:"no-store" });
+        if (!res.ok) throw new Error(`Impossibile leggere ${CSV_PATH} (HTTP ${res.status}).`);
         const text = await res.text();
         const rows = parseCSV(text).filter(r => r.some(c => c && c.trim().length>0));
         if (rows.length < 2) throw new Error("CSV vuoto o non valido.");
@@ -495,7 +480,7 @@
 
         DATA = objs.map(mapRow);
 
-        // sanity check: ruoli validi
+        // tiene solo ruoli validi
         const valid = new Set(["P","D","C","A"]);
         DATA = DATA.filter(x => valid.has((x.ruolo||"").trim()));
 
